@@ -1,26 +1,27 @@
-import {Button, Col, Flex, Row} from 'antd';
-import {FieldValues, useForm} from 'react-hook-form';
+import { Button, Col, Flex, Row } from 'antd';
+import { FieldValues, useForm } from 'react-hook-form';
 import CustomInput from '../components/CustomInput';
 import toastMessage from '../lib/toastMessage';
-import {useGetAllBrandsQuery} from '../redux/features/management/brandApi';
-import {useGetAllCategoriesQuery} from '../redux/features/management/categoryApi';
-import {useCreateNewProductMutation} from '../redux/features/management/productApi';
-import {useGetAllSellerQuery} from '../redux/features/management/sellerApi';
-import {ICategory} from '../types/product.types';
+import { useGetAllBrandsQuery } from '../redux/features/management/brandApi';
+import { useGetAllCategoriesQuery } from '../redux/features/management/categoryApi';
+import { useCreateNewProductMutation } from '../redux/features/management/productApi';
+import { useGetAllSellerQuery } from '../redux/features/management/sellerApi';
+import { ICategory } from '../types/product.types';
 import CreateSeller from '../components/product/CreateSeller';
 import CreateCategory from '../components/product/CreateCategory';
 import CreateBrand from '../components/product/CreateBrand';
+import { SpinnerIcon } from '@phosphor-icons/react';
 
 const CreateProduct = () => {
-  const [createNewProduct] = useCreateNewProductMutation();
-  const {data: categories} = useGetAllCategoriesQuery(undefined);
-  const {data: sellers} = useGetAllSellerQuery(undefined);
-  const {data: brands} = useGetAllBrandsQuery(undefined);
+  const [createNewProduct, { isLoading: isCreatingProduct }] = useCreateNewProductMutation();
+  const { data: categories } = useGetAllCategoriesQuery(undefined);
+  const { data: sellers } = useGetAllSellerQuery(undefined);
+  const { data: brands } = useGetAllBrandsQuery(undefined);
 
   const {
     handleSubmit,
     register,
-    formState: {errors},
+    formState: { errors },
     reset,
   } = useForm();
 
@@ -42,7 +43,10 @@ const CreateProduct = () => {
         reset();
       }
     } catch (error: any) {
+<<<<<<< HEAD
       console.log('API error:', error); // Add this line
+=======
+>>>>>>> 83fa2b0ed34ecd69f67355950df061dd709bcb3f
       toastMessage({ icon: 'error', text: error.data.message });
     }
   };
@@ -57,8 +61,8 @@ const CreateProduct = () => {
         }}
       >
         <Col
-          xs={{span: 24}}
-          lg={{span: 14}}
+          xs={{ span: 24 }}
+          lg={{ span: 14 }}
           style={{
             display: 'flex',
           }}
@@ -107,14 +111,14 @@ const CreateProduct = () => {
                 required={true}
               />
               <Row>
-                <Col xs={{span: 23}} lg={{span: 6}}>
+                <Col xs={{ span: 23 }} lg={{ span: 6 }}>
                   <label htmlFor='Size' className='label'>
                     Seller
                   </label>
                 </Col>
-                <Col xs={{span: 23}} lg={{span: 18}}>
+                <Col xs={{ span: 23 }} lg={{ span: 18 }}>
                   <select
-                    {...register('seller', {required: true})}
+                    {...register('seller', { required: true })}
                     className={`input-field ${errors['seller'] ? 'input-field-error' : ''}`}
                   >
                     <option value=''>Select Seller*</option>
@@ -126,14 +130,14 @@ const CreateProduct = () => {
               </Row>
 
               <Row>
-                <Col xs={{span: 23}} lg={{span: 6}}>
+                <Col xs={{ span: 23 }} lg={{ span: 6 }}>
                   <label htmlFor='Size' className='label'>
                     Category
                   </label>
                 </Col>
-                <Col xs={{span: 23}} lg={{span: 18}}>
+                <Col xs={{ span: 23 }} lg={{ span: 18 }}>
                   <select
-                    {...register('category', {required: true})}
+                    {...register('category', { required: true })}
                     className={`input-field ${errors['category'] ? 'input-field-error' : ''}`}
                   >
                     <option value=''>Select Category*</option>
@@ -145,12 +149,12 @@ const CreateProduct = () => {
               </Row>
 
               <Row>
-                <Col xs={{span: 23}} lg={{span: 6}}>
+                <Col xs={{ span: 23 }} lg={{ span: 6 }}>
                   <label htmlFor='Size' className='label'>
                     Brand
                   </label>
                 </Col>
-                <Col xs={{span: 23}} lg={{span: 18}}>
+                <Col xs={{ span: 23 }} lg={{ span: 18 }}>
                   <select
                     {...register('brand')}
                     className={`input-field ${errors['brand'] ? 'input-field-error' : ''}`}
@@ -166,12 +170,12 @@ const CreateProduct = () => {
               <CustomInput label='Description' name='description' register={register} />
 
               <Row>
-                <Col xs={{span: 23}} lg={{span: 6}}>
+                <Col xs={{ span: 23 }} lg={{ span: 6 }}>
                   <label htmlFor='Size' className='label'>
                     Size
                   </label>
                 </Col>
-                <Col xs={{span: 23}} lg={{span: 18}}>
+                <Col xs={{ span: 23 }} lg={{ span: 18 }}>
                   <select className={`input-field`} {...register('size')}>
                     <option value=''>Select Product Size</option>
                     <option value='SMALL'>Small</option>
@@ -184,15 +188,17 @@ const CreateProduct = () => {
                 <Button
                   htmlType='submit'
                   type='primary'
-                  style={{textTransform: 'uppercase', fontWeight: 'bold'}}
+                  disabled={isCreatingProduct}
+                  style={{ textTransform: 'uppercase', fontWeight: 'bold' }}
                 >
+                  {isCreatingProduct && <SpinnerIcon className='spin' weight='bold' />}
                   Add Product
                 </Button>
               </Flex>
             </form>
           </Flex>
         </Col>
-        <Col xs={{span: 24}} lg={{span: 10}}>
+        <Col xs={{ span: 24 }} lg={{ span: 10 }}>
           <Flex
             vertical
             style={{

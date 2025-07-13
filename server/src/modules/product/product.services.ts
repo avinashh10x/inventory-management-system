@@ -32,23 +32,33 @@ class ProductServices extends BaseServices<any> {
       session.startTransaction();
 
       const seller = await Seller.findById(payload.seller);
+      if (!seller) {
+        throw new CustomError(400, 'Seller not found');
+      }
       const product: any = await this.model.create([payload], { session });
+      if (!product || !product[0]) {
+        throw new CustomError(400, 'Product creation failed');
+      }
 
-      await Purchase.create(
-        [
-          {
-            user: userId,
-            seller: product[0]?.seller,
-            product: product[0]?._id,
-            sellerName: seller?.name,
-            productName: product[0]?.name,
-            quantity: product[0]?.stock,
-            unitPrice: product[0]?.price,
-            totalPrice: product[0]?.stock * product[0]?.price
-          }
-        ],
-        { session }
-      );
+      try {
+        await Purchase.create(
+          [
+            {
+              user: userId,
+              seller: product[0]?.seller,
+              product: product[0]?._id,
+              sellerName: seller?.name,
+              productName: product[0]?.name,
+              quantity: product[0]?.stock,
+              unitPrice: product[0]?.price,
+              totalPrice: product[0]?.stock * product[0]?.price
+            }
+          ],
+          { session }
+        );
+      } catch (purchaseError) {
+        throw new CustomError(400, `Purchase record creation failed: ${purchaseError.message}`);
+      }
 
       await session.commitTransaction();
 
@@ -163,10 +173,11 @@ class ProductServices extends BaseServices<any> {
       await session.commitTransaction();
 
       return product;
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log('Product creation error:', error);
       await session.abortTransaction();
-      throw new CustomError(400, 'Product create failed');
+      // Pass the original error message to the client
+      throw new CustomError(400, error?.message || JSON.stringify(error) || 'Product create failed');
     } finally {
       await session.endSession();
     }

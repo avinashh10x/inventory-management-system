@@ -25,7 +25,7 @@ const CreateProduct = () => {
   } = useForm();
 
   const onSubmit = async (data: FieldValues) => {
-    const payload = {...data};
+    const payload = { ...data };
     payload.price = Number(data.price);
     payload.stock = Number(data.stock);
 
@@ -33,16 +33,17 @@ const CreateProduct = () => {
       delete payload.size;
     }
 
+    console.log('Submitting payload:', payload); // Add this line
+
     try {
       const res = await createNewProduct(payload).unwrap();
       if (res.statusCode === 201) {
-        toastMessage({icon: 'success', text: res.message});
+        toastMessage({ icon: 'success', text: res.message });
         reset();
       }
     } catch (error: any) {
-      console.log(error);
-
-      toastMessage({icon: 'error', text: error.data.message});
+      console.log('API error:', error); // Add this line
+      toastMessage({ icon: 'error', text: error.data.message });
     }
   };
 

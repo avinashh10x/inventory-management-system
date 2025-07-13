@@ -62,7 +62,7 @@ const ProfilePage = () => {
             }}
           >
             {profileKeys.map((key) => (
-              <ProfileInfoItems keyName={key.keyName} value={data?.data[key.keyName]} />
+              <ProfileInfoItems keyName={key.keyName} value={data?.data?.[key?.keyName] ?? '-'} />
             ))}
           </Col>
           <Col xs={{ span: 24 }} lg={{ span: 4 }}></Col>

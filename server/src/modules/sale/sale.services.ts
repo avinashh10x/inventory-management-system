@@ -29,7 +29,7 @@ class SaleServices extends BaseServices<any> {
 
     try {
       session.startTransaction();
-
+ 
       await Product.findByIdAndUpdate(product?._id, { $inc: { stock: -quantity } }, { session });
       result = await this.model.create([payload], { session });
       await session.commitTransaction();
